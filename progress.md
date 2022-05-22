@@ -23,3 +23,15 @@ gpgpuにyoloxの環境がなかったので作り始めた。
 gpgpuに環境が出来た。データセットのパスが変。Cocodatasetの形式だが、階層形式が違う。
 アノテーションjsonの位置を変えて、yolox_base.pyのCOCODatasetのコンストラクタ引数を変更したよ。
 COCODatasetのコンストラクタ変更
+
+保存と再構築
+conda では出来ませんでした。conda pipでそれぞれ頑張ってください。
+
+
+python tools/train.py -f exps/myExps/yolox_x.py -d 2 -b 10 --fp16 -o -c yolox/yolox_x.pth
+
+gpgpu2では　-b 5　で動いた　上限はわからん
+python tools/train.py -f exps/myExps/yolox_x.py -d 2 -b 10 --fp16 -o -c yolox/yolox_x.pth
+
+gpgpu8ではnvidia-smiが動かなかった。pytorchのバージョンも違うっポイ。gpgpu間でpytrchのバージョンが違う時の運用方法を知る必要がある。
+直し方わからんので要相談
