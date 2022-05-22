@@ -22,3 +22,4 @@ gpgpuにyoloxの環境がなかったので作り始めた。
 ## 2022 05 22
 gpgpuに環境が出来た。データセットのパスが変。Cocodatasetの形式だが、階層形式が違う。
 アノテーションjsonの位置を変えて、yolox_base.pyのCOCODatasetのコンストラクタ引数を変更したよ。
+COCODatasetのコンストラクタ変更
