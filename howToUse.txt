@@ -1,1 +1,6 @@
 python tools/demo.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device 0
+
+保存と再構築
+conda では出来ませんでした。conda pipでそれぞれ頑張ってください。
+
+python tools/train.py -f exps/myExps/yolox_x.py -d 1 -b 16 --fp16 -o -c yolox/yolox_x.pth

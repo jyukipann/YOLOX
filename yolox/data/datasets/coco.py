@@ -32,7 +32,7 @@ class COCODataset(Dataset):
         Args:
             data_dir (str): dataset root directory
             json_file (str): COCO json file name
-            name (str): COCO data name (e.g. 'train2017' or 'val2017')
+            name (str): COCO data name (e.g. 'train2017' or 'val2017')  
             img_size (int): target image size after pre-processing
             preproc: data augmentation strategy
         """
@@ -169,6 +169,7 @@ class COCODataset(Dataset):
         file_name = self.annotations[index][3]
 
         img_file = os.path.join(self.data_dir, self.name, file_name)
+        # print(img_file)
 
         img = cv2.imread(img_file)
         assert img is not None
