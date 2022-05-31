@@ -1,3 +1,5 @@
+# python minimal_set/calc_iou_csv.py
+
 import csv
 import numpy as np
 import cv2
@@ -48,7 +50,8 @@ if __name__ == '__main__':
     ano = opencsv('flir_anotation_val_data.csv')
     header, ano = ano[0], ano[1:]
     # data = opencsv('flir_dataset_train_yolox_result.csv')
-    data = opencsv('flir_dataset_val_thermal_yolox_result.csv')
+    # data = opencsv('flir_dataset_val_thermal_yolox_result.csv')
+    data = opencsv('flir_dataset_val_thermal_yolox_result_finetuned.csv')
     _, data = data[0], data[1:]
     ano = np.array(ano)
     ano_paths = ano[:,0]
@@ -63,7 +66,8 @@ if __name__ == '__main__':
     # data[:, 4] += data[:, 2]
     img_id = 0
     
-    out_path = 'yolox_val_iou.csv'
+    # out_path = 'yolox_val_iou.csv'
+    out_path = 'yolox_val_iou_finetuned.csv'
     with open(out_path, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['path', 'image_id', 'iou_max'])

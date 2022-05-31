@@ -1,4 +1,5 @@
 # python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
+# python minimal_set/main_flir_dataset.py image -n yolox-x -c YOLOX_outputs/yolox_x/best_ckpt.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
 import argparse
 import os
 import sys
@@ -299,9 +300,9 @@ def main(exp, args, output_file_name):
 
 
     # dataset = flir_dataloader.FlirDataset()
-    # dataset = flir_dataloader.FlirDataset(dataset_dir="val")
+    dataset = flir_dataloader.FlirDataset(dataset_dir="val")
     # dataset = flir_dataloader.FlirDataset(dataset_dir="val",RGB=True)
-    dataset = flir_dataloader.FlirDataset(dataset_dir="train",RGB=True)
+    # dataset = flir_dataloader.FlirDataset(dataset_dir="train",RGB=True)
     # dataset = flir_dataloader.FlirDataset(dataset_dir="train")
 
     with open(output_file_name, 'w', newline='') as f:
@@ -328,4 +329,4 @@ def main(exp, args, output_file_name):
 if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
-    main(exp, args, "flir_dataset_train_RGB_yolox_result.csv")
+    main(exp, args, "flir_dataset_val_thermal_yolox_result_finetuned.csv")
