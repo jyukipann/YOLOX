@@ -16,8 +16,8 @@ def opencsv(path):
 if __name__ == "__main__":
     # target_csv_path = "flir_dataset_val_thermal_yolox_result.csv"
     # target_csv_path = "flir_dataset_val_thermal_yolox_result_finetuned.csv"
-    target_csv_path = "yolox_val_iou_finetuned.csv"
-    # target_csv_path = "yolox_val_iou.csv"     
+    # target_csv_path = "yolox_val_iou_finetuned.csv"
+    target_csv_path = "yolox_val_iou.csv"     
     target_data = opencsv(target_csv_path)
     target_header = target_data[0]
     target_data = target_data[1:]
@@ -41,8 +41,8 @@ if __name__ == "__main__":
     plt.xlabel("IOU", fontname="MS Gothic")
     plt.ylabel("度数", fontname="MS Gothic")
     plt.legend()
-    # plt.show()
-    # exit(0)
+    plt.show()
+    exit(0)
 
     target_csv_path = "flir_dataset_val_thermal_yolox_result_finetuned.csv"
     target_csv_path = "flir_dataset_val_thermal_yolox_result.csv"
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     # print(target_data_img_paths_ids[0])
     img_ids = [0]
     windows = []
-    for id in [1364,1365]:
+    for id in [1364]:
         result_index = target_data_img_paths_ids[:,1] == f"{id}"
         ano_index = anotation_data[:,1] == f"{id}"
         path = target_data_img_paths_ids[result_index,:][0,0]
