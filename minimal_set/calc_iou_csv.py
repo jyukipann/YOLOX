@@ -42,6 +42,8 @@ def iou_np(a, b):
     
     # N個のbについて、aとのIoUを一気に計算
     iou = intersect / (a_area + b_area - intersect)
+    # print(iou)
+    # exit(0)
     return iou
 
 if __name__ == '__main__':
@@ -73,21 +75,56 @@ if __name__ == '__main__':
         writer.writerow(['path', 'image_id', 'iou_max'])
 
     debug = True
-    while True:
-        print('\r',end='')
-        ano_mask = ano[:,0] == img_id
+    debug = False
+    last_id = ano[-1,0]
+    anno_dic = {}
+    for i,row in enumerate(ano):
+        image_id = int(row[0])
+        try:
+            anno_dic[image_id].append(i)
+        except:
+            anno_dic[image_id] = [i]
+    data_dic = {}
+    for i,row in enumerate(data):
+        image_id = int(row[0])
+        try:
+            data_dic[image_id].append(i)
+        except:
+            data_dic[image_id] = [i]
+
+    for img_id,ano_mask in anno_dic.items():
+        # print('\r',end='')
+        # ano_mask = ano[:,0] == img_id
         ano_i = ano[ano_mask]
         if len(ano_i) < 1:
-            break
-        ano_path_i = ano_paths[ano_mask][0]
-        data_i = data[data[:,0] == img_id]
+            continue
+        ano_path_i = ano_paths[ano_mask[0]][0]
+        try:
+            data_i = data[data_dic[image_id]]
+        except:
+            data_i = None
+            print("data None")
+        # print(data_i)
+        # exit(0  )
         # print(ano_i)
         # print(ano_path_i)
         # print(data_i)
+        # data_i = data[data[:,0] == img_id]
         rows = []
         show_flag = False
+        if img_id % 10 == 0:
+            # print(f"id:{img_id}",end='')
+            pass
         for a in ano_i:
-            iou_max = np.max(iou_np(a[1:5], data_i[:, 1:5]))
+            if data_i is None:
+                iou_max = 0
+            else:
+                iou_max = float(np.max(iou_np(a[1:5], data_i[:, 1:5])))
+            # print(a[1:5], data_i[:, 1:5])
+            # print(iou_np(a[1:5], data_i[:, 1:5]))
+            # print(type(np.max(iou_np(a[1:5], data_i[:, 1:5]))))
+            # if img_id > 2:
+            #     exit(0)
             # print(iou_max)
             if iou_max > 0.1:
                 show_flag = True
@@ -115,7 +152,6 @@ if __name__ == '__main__':
         with open(out_path, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(rows)
-        img_id += 1
         # exit(0)
     if debug:
         cv2.waitKey(0)
