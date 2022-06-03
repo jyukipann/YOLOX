@@ -1,4 +1,5 @@
 import csv
+from unicodedata import category
 import flir_dataloader
 
 
@@ -17,7 +18,8 @@ if __name__ == '__main__':
         for t in target:
             t['bbox'][2] += t['bbox'][0]
             t['bbox'][3] += t['bbox'][1]
-            row = [img_info['file_name'], i] + t['bbox'] + [0] + [t['category_id']]
+            category_id = t['category_id']
+            row = [img_info['file_name'], i] + t['bbox'] + [0] + [category_id]
             rows.append(row)
         with open(output_file_name, 'a', newline='') as f:
             writer = csv.writer(f)
