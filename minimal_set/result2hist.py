@@ -16,8 +16,8 @@ def opencsv(path):
 if __name__ == "__main__":
     # target_csv_path = "flir_dataset_val_thermal_yolox_result.csv"
     # target_csv_path = "flir_dataset_val_thermal_yolox_result_finetuned.csv"
-    # target_csv_path = "yolox_val_iou_finetuned.csv"
-    target_csv_path = "experiment_result/finetuned/flir_dataset_val_thermal_yolox_val_iou.csv"
+    target_csv_path = "experiment_result/before/yolox_val_iou.csv"
+    # target_csv_path = "experiment_result/finetuned/flir_dataset_val_thermal_yolox_val_iou.csv"
     target_data = opencsv(target_csv_path)
     target_header = target_data[0]
     target_data = target_data[1:]

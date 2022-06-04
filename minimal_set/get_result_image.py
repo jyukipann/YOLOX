@@ -2,6 +2,7 @@
 import csv
 import numpy as np
 import cv2
+import flir_dataloader
 
 def opencsv(path):
     with open(path, 'r') as f:

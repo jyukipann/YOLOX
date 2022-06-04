@@ -300,8 +300,8 @@ def main(exp, args, output_file_name):
 
 
     # dataset = flir_dataloader.FlirDataset()
-    dataset = flir_dataloader.FlirDataset(dataset_dir="val")
-    # dataset = flir_dataloader.FlirDataset(dataset_dir="val",RGB=True)
+    # dataset = flir_dataloader.FlirDataset(dataset_dir="val")
+    dataset = flir_dataloader.FlirDataset(dataset_dir="val",RGB=True)
     # dataset = flir_dataloader.FlirDataset(dataset_dir="train",RGB=True)
     # dataset = flir_dataloader.FlirDataset(dataset_dir="train")
 
@@ -313,6 +313,10 @@ def main(exp, args, output_file_name):
         if img is None:
             continue
         outputs = predictor.inference(img, img_info)
+        # cv2.imshow("img",img)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+        # exit(0)
         ratio = img_info["ratio"]
         rows = []
         if outputs[0] is None:
@@ -320,7 +324,7 @@ def main(exp, args, output_file_name):
         for info in outputs[0]:
             x1,y1,x2,y2,conf1,conf2,class_id = info
             x1,y1,x2,y2 = [int(a/ratio) for a in [x1,y1,x2,y2]]
-            rows.append([img_info["file_name"],i,x1,y1,x2,y2,float(conf1*conf2),int(class_id+1)])
+            rows.append([img_info["file_name"],i,x1,y1,x2,y2,float(conf1*conf2),int(class_id)])
         with open(output_file_name, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(rows)
@@ -330,4 +334,7 @@ if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
     # main(exp, args, "flir_dataset_val_thermal_yolox_result_finetuned.csv")
-    main(exp, args, "experiment_result/finetuned/flir_dataset_val_thermal_yolox_result_finetuned.csv")
+    # main(exp, args, "experiment_result/finetuned/flir_dataset_val_thermal_yolox_result_finetuned.csv")
+    
+    # python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
+    main(exp, args, "experiment_result/RGB_before/flir_dataset_val_RGB_yolox_result.csv")
