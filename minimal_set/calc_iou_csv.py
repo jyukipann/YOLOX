@@ -78,10 +78,10 @@ def calc_iou(a, b):
 if __name__ == '__main__':
     print('compute')
     # ano = opencsv('flir_anotation_train_data.csv')
-    ano = opencsv('flir_anotation_val_data.csv')
+    ano = opencsv('experiment_result/finetuned/flir_anotation_val_data.csv')
     header, ano = ano[0], ano[1:]
     # data = opencsv('flir_dataset_train_yolox_result.csv')
-    data = opencsv('flir_dataset_val_thermal_yolox_result.csv')
+    data = opencsv('experiment_result/finetuned/flir_dataset_val_thermal_yolox_result_finetuned.csv')
     # data = opencsv('flir_dataset_val_thermal_yolox_result_finetuned.csv')
     _, data = data[0], data[1:]
     ano = np.array(ano)
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     # data[:, 4] += data[:, 2]
     img_id = 0
     
-    out_path = 'yolox_val_iou.csv'
+    out_path = 'experiment_result/finetuned/flir_dataset_val_thermal_yolox_val_iou.csv'
     # out_path = 'yolox_val_iou_finetuned.csv'
     with open(out_path, 'w', newline='') as f:
         writer = csv.writer(f)
@@ -122,7 +122,7 @@ if __name__ == '__main__':
             data_dic[image_id] = [i]
 
     for img_id,ano_mask in anno_dic.items():
-        # print('\r',end='')
+        print('\r',end='')
         # ano_mask = ano[:,0] == img_id
         ano_i = ano[ano_mask]
         if len(ano_i) < 1:
@@ -142,8 +142,7 @@ if __name__ == '__main__':
         rows = []
         show_flag = False
         if img_id % 10 == 0:
-            # print(f"id:{img_id}",end='')
-            pass
+            print(f"id:{img_id}",end='')
         for a in ano_i:
             debug_str = ""
             debug_str2 = ""
@@ -160,16 +159,16 @@ if __name__ == '__main__':
                     if iou_max < iou:
                         iou_max = iou
 
-                    if iou < 0.0001:
-                        debug_str += f"{a[0]}"
-                        debug_str += f"{iou}"
-                        debug_str += f"{[ax1,ay1,ax2,ay2]}"
-                        debug_str += f"{[dx1,dy1,dx2,dy2]}\n"
-                    else:
-                        debug_str2 += f"{a[0]}"
-                        debug_str2 += f"{iou}"
-                        debug_str2 += f"{[ax1,ay1,ax2,ay2]}"
-                        debug_str2 += f"{[dx1,dy1,dx2,dy2]}\n"
+                    # if iou < 0.0001:
+                    #     debug_str += f"{a[0]}"
+                    #     debug_str += f"{iou}"
+                    #     debug_str += f"{[ax1,ay1,ax2,ay2]}"
+                    #     debug_str += f"{[dx1,dy1,dx2,dy2]}\n"
+                    # else:
+                    #     debug_str2 += f"{a[0]}"
+                    #     debug_str2 += f"{iou}"
+                    #     debug_str2 += f"{[ax1,ay1,ax2,ay2]}"
+                    #     debug_str2 += f"{[dx1,dy1,dx2,dy2]}\n"
 
                         # print(a[0],iou,[ax1,ay1,ax2,ay2],[dx1,dy1,dx2,dy2])
                 # if iou_max < 0.001:

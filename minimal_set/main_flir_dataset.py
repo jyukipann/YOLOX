@@ -320,7 +320,7 @@ def main(exp, args, output_file_name):
         for info in outputs[0]:
             x1,y1,x2,y2,conf1,conf2,class_id = info
             x1,y1,x2,y2 = [int(a/ratio) for a in [x1,y1,x2,y2]]
-            rows.append([img_info["file_name"],i,x1,y1,x2,y2,float(conf1*conf2),int(class_id)])
+            rows.append([img_info["file_name"],i,x1,y1,x2,y2,float(conf1*conf2),int(class_id+1)])
         with open(output_file_name, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(rows)
@@ -329,4 +329,5 @@ def main(exp, args, output_file_name):
 if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
-    main(exp, args, "flir_dataset_val_thermal_yolox_result_finetuned.csv")
+    # main(exp, args, "flir_dataset_val_thermal_yolox_result_finetuned.csv")
+    main(exp, args, "experiment_result/finetuned/flir_dataset_val_thermal_yolox_result_finetuned.csv")

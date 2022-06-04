@@ -1,5 +1,4 @@
 import csv
-from unicodedata import category
 import flir_dataloader
 
 
@@ -7,8 +6,8 @@ if __name__ == '__main__':
     print('output')
     # dataset = flir_dataloader.FlirDataset(dataset_dir="train")
     # output_file_name = 'flir_anotation_train_data.csv'
-    # dataset = flir_dataloader.FlirDataset(dataset_dir="val")
-    # output_file_name = 'flir_anotation_val_data.csv'
+    dataset = flir_dataloader.FlirDataset(dataset_dir="val")
+    output_file_name = 'flir_anotation_val_data.csv'
     with open(output_file_name, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['path', 'image_id', 'x1', 'y1', 'x2', 'y2', 'conf', 'class_id'])

@@ -12,3 +12,5 @@ python tools/train.py -f exps/myExps/yolox_x.py -d 2 -b 10 --fp16 -o -c yolox/yo
 gpgpu8ではnvidia-smiが動かなかった。
 
 python tools/train.py -f exps/myExps/yolox_x.py -d 0 -b 20 --fp16 -o -c yolox/yolox_x.pth
+
+python tools/demo.py image -n yolox-x -c YOLOX_outputs/yolox_x/latest_ckpt.pth --path /work/tanimoto.j/dataset/flir/FLIR_ADAS_1_3/val/thermal_8_bit/FLIR_08863.jpeg --conf 0.25 --nms 0.45 --tsize 640 --save_result --device 0
