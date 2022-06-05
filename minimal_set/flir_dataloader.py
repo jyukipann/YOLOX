@@ -73,7 +73,7 @@ class FlirDataset(torch.utils.data.Dataset):
         return img, target, img_info, img_id
 
 if __name__ == '__main__':
-    fir_dataset = FlirDataset()
+    fir_dataset = FlirDataset(RGB=True)
     img, target, img_info, img_id = fir_dataset[0]
     # print(fir_dataset[0])
     # ids = [a[] anotation['annotations']]
