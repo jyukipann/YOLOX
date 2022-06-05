@@ -16,7 +16,10 @@ def opencsv(path):
 if __name__ == "__main__":
     # target_csv_path = "flir_dataset_val_thermal_yolox_result.csv"
     # target_csv_path = "flir_dataset_val_thermal_yolox_result_finetuned.csv"
-    target_csv_path = "experiment_result/before/yolox_val_iou.csv"
+    # target_csv_path = "experiment_result/before/yolox_val_iou.csv"
+    # target_csv_path = r"experiment_result\before\flir_dataset_val_RGB_yolox_val_iou.csv"
+    # target_csv_path = r"experiment_result\before\flir_dataset_val_RGB_yolox_val_iou_sunny.csv"
+    target_csv_path = r"experiment_result\before\flir_dataset_val_thermal_val_iou_sunny.csv"
     # target_csv_path = "experiment_result/finetuned/flir_dataset_val_thermal_yolox_val_iou.csv"
     target_data = opencsv(target_csv_path)
     target_header = target_data[0]
@@ -37,7 +40,8 @@ if __name__ == "__main__":
     for i in rng:
         print(f"{i}:{target_data_iou[(target_data_iou >= i) & (target_data_iou < i+0.1)].shape[0]}")
     plt.hist(target_data_iou,bins=100, label="thermal 8bit iou")
-    plt.title('遠赤外線8bit画像のyoloxの推定結果のIOUのヒストグラム', fontname="MS Gothic")
+    # plt.title('遠赤外線8bit画像のyoloxの推定結果のIOUのヒストグラム', fontname="MS Gothic")
+    plt.title('遠赤外線画像のyoloxの推定結果のIOUのヒストグラム', fontname="MS Gothic")
     plt.xlabel("IOU", fontname="MS Gothic")
     plt.ylabel("度数", fontname="MS Gothic")
     plt.legend()
