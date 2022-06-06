@@ -40,21 +40,22 @@ def gen_img_id_index(ids):
 
 if __name__ == "__main__":
     annotation_csv_path = "experiment_result/finetuned/flir_anotation_val_data.csv"
-    annotation_csv_path = 'experiment_result/before/flir_anotation_val_RGB_data.csv'
+    # annotation_csv_path = 'experiment_result/before/flir_anotation_val_RGB_data.csv'
 
     # target_result_csv_path = "experiment_result/finetuned/flir_dataset_val_thermal_yolox_result_finetuned.csv"
     # target_csv_path = "flir_dataset_val_thermal_yolox_result.csv"
 
     # thermal annotation
-    target_annotation_csv_path = "experiment_result/finetuned/flir_anotation_val_data.csv"
+    # target_annotation_csv_path = "experiment_result/finetuned/flir_anotation_val_data.csv"
     target_annotation_csv_path = "experiment_result/before/flir_anotation_val_data.csv"
-    target_result_csv_path = target_annotation_csv_path
-    target_result_csv_path = None
+    # target_result_csv_path = target_annotation_csv_path
+    target_result_csv_path = r"experiment_result\before\flir_dataset_val_thermal_yolox_result.csv"
+    # target_result_csv_path = None
 
-    # target_iou_csv_path = "experiment_result/finetuned/flir_dataset_val_thermal_yolox_val_iou.csv"
-    target_iou_csv_path = None
+    target_iou_csv_path = "experiment_result/finetuned/flir_dataset_val_thermal_yolox_val_iou.csv"
+    # target_iou_csv_path = None
 
-    img_ids = [0,10,100,1181]
+    img_ids = [0,10,100,1181,176]
     anno_color = (255,0,0)
     target_color = (0,0,255)
     window_titles = []
