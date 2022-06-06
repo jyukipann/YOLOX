@@ -1,4 +1,3 @@
-from ctypes.wintypes import RGB
 import numpy as np
 import convert_rects
 import csv
