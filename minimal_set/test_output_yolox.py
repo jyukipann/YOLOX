@@ -1,6 +1,3 @@
-# python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
-# python minimal_set/main_flir_dataset.py image -n yolox-x -c YOLOX_outputs/yolox_x/best_ckpt.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
-# python minimal_set/main_flir_dataset.py image -n yolox-x -c experiment_result/finetuned/best_ckpt.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
 import argparse
 import os
 import sys
@@ -311,14 +308,10 @@ def main(exp, args, output_file_name):
         writer.writerow(['path', 'image_id', 'x1', 'y1', 'x2', 'y2', 'conf', 'class_id'])
     for i in range(len(dataset)):
         img, target, img_info, img_id = dataset[i]
-        # img, target, img_info, img_id = dataset[1227]
         if img is None:
             continue
-        # cv2.imshow("img",img)
         outputs = predictor.inference(img, img_info)
-        # print(img_info)
         # print(outputs)
-        # print(outputs[0].shape)
         # exit(0)
         # cv2.imshow("img",img)
         # cv2.waitKey(0)
@@ -331,13 +324,10 @@ def main(exp, args, output_file_name):
         for info in outputs[0]:
             x1,y1,x2,y2,conf1,conf2,class_id = info
             x1,y1,x2,y2 = [int(a/ratio) for a in [x1,y1,x2,y2]]
-            rows.append([img_info["file_name"],img_id[0],x1,y1,x2,y2,float(conf1*conf2),int(class_id)])
+            rows.append([img_info["file_name"],img_id,x1,y1,x2,y2,float(conf1*conf2),int(class_id)])
         with open(output_file_name, 'a', newline='') as f:
             writer = csv.writer(f)
             writer.writerows(rows)
-        # print(len(rows))
-        # print(rows)
-        # exit(0)
 
 
 if __name__ == "__main__":
@@ -349,4 +339,4 @@ if __name__ == "__main__":
     # python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
     # main(exp, args, "experiment_result/RGB_before/flir_dataset_val_RGB_yolox_result.csv")
     
-    main(exp, args, "experiment_result/before/20220607_flir_dataset_val_RGB_yolox_result.csv")
+    # main(exp, args, "experiment_result/before/flir_dataset_val_RGB_yolox_result.csv")

@@ -1,27 +1,20 @@
-# python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
-# python minimal_set/main_flir_dataset.py image -n yolox-x -c YOLOX_outputs/yolox_x/best_ckpt.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
-# python minimal_set/main_flir_dataset.py image -n yolox-x -c experiment_result/finetuned/best_ckpt.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+# Copyright (c) Megvii, Inc. and its affiliates.
+
 import argparse
 import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import time
 from loguru import logger
 
 import cv2
 
 import torch
-import torchvision
 
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
-
-import pathlib
-import flir_dataloader
-import csv
-
 
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
@@ -112,7 +105,7 @@ class Predictor(object):
         cls_names=COCO_CLASSES,
         trt_file=None,
         decoder=None,
-        device="0",
+        device="cpu",
         fp16=False,
         legacy=False,
     ):
@@ -136,15 +129,30 @@ class Predictor(object):
             self.model(x)
             self.model = model_trt
 
-    def inference(self, img, img_info):
+    def inference(self, img):
+        img_info = {"id": 0}
+        if isinstance(img, str):
+            img_info["file_name"] = os.path.basename(img)
+            img = cv2.imread(img)
+        else:
+            img_info["file_name"] = None
+
+        height, width = img.shape[:2]
+        img_info["height"] = height
+        img_info["width"] = width
+        img_info["raw_img"] = img
 
         ratio = min(self.test_size[0] / img.shape[0], self.test_size[1] / img.shape[1])
         img_info["ratio"] = ratio
+
         img, _ = self.preproc(img, None, self.test_size)
         img = torch.from_numpy(img).unsqueeze(0)
         img = img.float()
         if self.device == "gpu":
             img = img.cuda()
+            if self.fp16:
+                img = img.half()  # to FP16
+
         with torch.no_grad():
             t0 = time.time()
             outputs = self.model(img)
@@ -155,7 +163,7 @@ class Predictor(object):
                 self.nmsthre, class_agnostic=True
             )
             logger.info("Infer time: {:.4f}s".format(time.time() - t0))
-        return outputs
+        return outputs, img_info
 
     def visual(self, output, img_info, cls_conf=0.35):
         ratio = img_info["ratio"]
@@ -182,20 +190,36 @@ def image_demo(predictor, vis_folder, path, current_time, save_result):
     else:
         files = [path]
     files.sort()
+    import csv
+    output_file_name = r"experiment_result\demoOutput\rgb_result_demo.csv"
+    with open(output_file_name, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['path', 'image_id', 'x1', 'y1', 'x2', 'y2', 'conf', 'class_id'])
     for image_name in files:
         outputs, img_info = predictor.inference(image_name)
-        result_image = predictor.visual(outputs[0], img_info, predictor.confthre)
-        if save_result:
-            save_folder = os.path.join(
-                vis_folder, time.strftime("%Y_%m_%d_%H_%M_%S", current_time)
-            )
-            os.makedirs(save_folder, exist_ok=True)
-            save_file_name = os.path.join(save_folder, os.path.basename(image_name))
-            logger.info("Saving detection result in {}".format(save_file_name))
-            cv2.imwrite(save_file_name, result_image)
-        ch = cv2.waitKey(0)
-        if ch == 27 or ch == ord("q") or ch == ord("Q"):
-            break
+        ratio = img_info["ratio"]
+        rows = []
+        if outputs[0] is None:
+            continue
+        for info in outputs[0]:
+            x1,y1,x2,y2,conf1,conf2,class_id = info
+            x1,y1,x2,y2 = [int(a/ratio) for a in [x1,y1,x2,y2]]
+            rows.append([img_info["file_name"],-1,x1,y1,x2,y2,float(conf1*conf2),int(class_id)])
+        with open(output_file_name, 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows(rows)
+        # result_image = predictor.visual(outputs[0], img_info, predictor.confthre)
+        # if save_result:
+        #     save_folder = os.path.join(
+        #         vis_folder, time.strftime("%Y_%m_%d_%H_%M_%S", current_time)
+        #     )
+        #     os.makedirs(save_folder, exist_ok=True)
+        #     save_file_name = os.path.join(save_folder, os.path.basename(image_name))
+        #     logger.info("Saving detection result in {}".format(save_file_name))
+        #     cv2.imwrite(save_file_name, result_image)
+        # ch = cv2.waitKey(0)
+        # if ch == 27 or ch == ord("q") or ch == ord("Q"):
+        #     break
 
 
 def imageflow_demo(predictor, vis_folder, current_time, args):
@@ -228,12 +252,8 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         else:
             break
 
-def half_img(img):
-    h,w,c = img.shape
-    w,h = int(w/2),int(h/2)
-    return cv2.resize(img, (w,h))
 
-def main(exp, args, output_file_name):
+def main(exp, args):
     if not args.experiment_name:
         args.experiment_name = exp.exp_name
 
@@ -298,55 +318,16 @@ def main(exp, args, output_file_name):
         model, exp, COCO_CLASSES, trt_file, decoder,
         args.device, args.fp16, args.legacy,
     )
-
-
-    # dataset = flir_dataloader.FlirDataset()
-    # dataset = flir_dataloader.FlirDataset(dataset_dir="val")
-    dataset = flir_dataloader.FlirDataset(dataset_dir="val",RGB=True)
-    # dataset = flir_dataloader.FlirDataset(dataset_dir="train",RGB=True)
-    # dataset = flir_dataloader.FlirDataset(dataset_dir="train")
-
-    with open(output_file_name, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['path', 'image_id', 'x1', 'y1', 'x2', 'y2', 'conf', 'class_id'])
-    for i in range(len(dataset)):
-        img, target, img_info, img_id = dataset[i]
-        # img, target, img_info, img_id = dataset[1227]
-        if img is None:
-            continue
-        # cv2.imshow("img",img)
-        outputs = predictor.inference(img, img_info)
-        # print(img_info)
-        # print(outputs)
-        # print(outputs[0].shape)
-        # exit(0)
-        # cv2.imshow("img",img)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        # exit(0)
-        ratio = img_info["ratio"]
-        rows = []
-        if outputs[0] is None:
-            continue
-        for info in outputs[0]:
-            x1,y1,x2,y2,conf1,conf2,class_id = info
-            x1,y1,x2,y2 = [int(a/ratio) for a in [x1,y1,x2,y2]]
-            rows.append([img_info["file_name"],img_id[0],x1,y1,x2,y2,float(conf1*conf2),int(class_id)])
-        with open(output_file_name, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerows(rows)
-        # print(len(rows))
-        # print(rows)
-        # exit(0)
+    current_time = time.localtime()
+    if args.demo == "image":
+        image_demo(predictor, vis_folder, args.path, current_time, args.save_result)
+    elif args.demo == "video" or args.demo == "webcam":
+        imageflow_demo(predictor, vis_folder, current_time, args)
 
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
-    # main(exp, args, "flir_dataset_val_thermal_yolox_result_finetuned.csv")
-    # main(exp, args, "experiment_result/finetuned/flir_dataset_val_thermal_yolox_result_finetuned.csv")
-    
-    # python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
-    # main(exp, args, "experiment_result/RGB_before/flir_dataset_val_RGB_yolox_result.csv")
-    
-    main(exp, args, "experiment_result/before/20220607_flir_dataset_val_RGB_yolox_result.csv")
+
+    main(exp, args)
+    # python tools/demo_FLIR.py image -n yolox-x -c yolox/yolox_x.pth --path W:\tanimoto.j\dataset\flir\FLIR_ADAS_1_3\val\RGB --conf 0.25 --nms 0.45 --tsize 640 --save_result --device 0

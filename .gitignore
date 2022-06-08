@@ -220,3 +220,6 @@ events.out.tfevents*
 # vim
 .vim
 *.mp4
+*.jpg
+*.jpeg
+*.png
