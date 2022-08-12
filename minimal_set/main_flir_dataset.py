@@ -349,4 +349,5 @@ if __name__ == "__main__":
     # python minimal_set/main_flir_dataset.py image -n yolox-x -c yolox/yolox_x.pth --path assets/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device gpu
     # main(exp, args, "experiment_result/RGB_before/flir_dataset_val_RGB_yolox_result.csv")
     
-    main(exp, args, "experiment_result/before/20220607_flir_dataset_val_RGB_yolox_result.csv")
+    main(exp, args, "experiment_result/before/20220811_flir_dataset_val_RGB_yolox_result.csv")
+    # main(exp, args, "experiment_result/before/20220811_flir_dataset_train_RGB_yolox_result.csv")

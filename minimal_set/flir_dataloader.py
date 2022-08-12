@@ -7,15 +7,16 @@ from pycocotools.coco import COCO
 from torch.utils.data import Dataset
 import cv2
 import PIL
+import platform
 
 # params
-dataset_root = pathlib.Path(r"\\aka\work\tanimoto.j\dataset\flir\FLIR_ADAS_1_3")
-dataset_dir = "val"
+# dataset_root = pathlib.Path(r"\\aka\work\tanimoto.j\dataset\flir\FLIR_ADAS_1_3")
+# dataset_dir = "val"
 
-anotation_path = list((dataset_root/dataset_dir).glob('*.json'))[0]
-# print('anotation_path :',anotation_path)
-anotation_file = open(anotation_path, 'r')
-anotation = json.load(anotation_file)
+# anotation_path = list((dataset_root/dataset_dir).glob('*.json'))[0]
+# # print('anotation_path :',anotation_path)
+# anotation_file = open(anotation_path, 'r')
+# anotation = json.load(anotation_file)
 
 # print(anotation.keys())
 # print(anotation['annotations'][0:7])
@@ -30,7 +31,12 @@ class FlirDataset(torch.utils.data.Dataset):
     def __init__(self, dataset_root=r"\\aka\work\tanimoto.j\dataset\flir\FLIR_ADAS_1_3", dataset_dir="val", transform=None, RGB=False):
         self.RGB = RGB
         self.dataset_root = pathlib.Path(dataset_root)
+        if platform.system() != "Windows":
+            self.dataset_root = pathlib.Path("/work/tanimoto.j/dataset/flir/FLIR_ADAS_1_3")
         self.dataset_dir = dataset_dir
+        # print(self.dataset_root)
+        # print(self.dataset_root/self.dataset_dir)
+        # exit()
         anotation_path = list((self.dataset_root/self.dataset_dir).glob('*.json'))[0]
         # anotation_file = open(anotation_path, 'r')
         # anotation = json.load(anotation_file)

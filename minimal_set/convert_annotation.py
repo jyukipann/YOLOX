@@ -33,14 +33,14 @@ if __name__ == "__main__":
     # print(thermal_annotation_image_paths[0])
     # print(thermal_annotation_rects[0])
 
-    # with open(RGB_annotation_path,'w',newline="",encoding="utf-8") as f:
-    #     writer = csv.writer(f)
-    #     writer.writerow(header)
-    #     for i in range(thermal_annotation_data.shape[0]):
-    #         writer.writerow([
-    #             thermal_annotation_image_paths[i],
-    #             thermal_annotation_image_ids[i],
-    #             *thermal_annotation_rects[i],
-    #             thermal_annotation_conf[i],
-    #             thermal_annotation_category_ids[i]
-    #         ])
+    with open(RGB_annotation_path,'w',newline="",encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for i in range(thermal_annotation_data.shape[0]):
+            writer.writerow([
+                thermal_annotation_image_paths[i],
+                thermal_annotation_image_ids[i],
+                *thermal_annotation_rects[i],
+                thermal_annotation_conf[i],
+                thermal_annotation_category_ids[i]
+            ])

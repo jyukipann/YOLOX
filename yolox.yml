@@ -1,6 +1,5 @@
 name: yolox
 channels:
-  - pytorch
   - conda-forge
   - defaults
 dependencies:
@@ -39,7 +38,6 @@ dependencies:
   - pip=21.3.1=pyhd8ed1ab_0
   - python=3.7.10=h900ac77_104_cpython
   - python_abi=3.7=2_cp37m
-  - pytorch-mutex=1.0=cuda
   - setuptools=58.2.0=py37h03978a9_0
   - sqlite=3.36.0=h8ffe710_2
   - tbb=2021.4.0=h2d74725_1
@@ -100,9 +98,6 @@ dependencies:
     - tensorboard-plugin-wit==1.8.0
     - thop==0.0.31-2005241907
     - tifffile==2021.10.12
-    - torch==1.10.0+cu113
-    - torchaudio==0.10.0+cu113
-    - torchvision==0.11.1+cu113
     - tqdm==4.62.3
     - urllib3==1.26.7
     - werkzeug==2.0.2

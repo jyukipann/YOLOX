@@ -26,4 +26,4 @@ python tools/demo.py image -n yolox-x -c yolox/yolox_x.pth --path \\aka\work\tan
 \\aka\work\tanimoto.j\dataset\flir\FLIR_ADAS_1_3\val\thermal_8_bit\FLIR_09092.jpeg
 
 python tools/demo.py image -n yolox-x -c yolox/yolox_x.pth --path \\aka\work\tanimoto.j\dataset\flir\FLIR_ADAS_1_3\val\thermal_8_bit\ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device 0
-python tools/demo.py image -n yolox-x -c experiment_result\finetuned\best_ckpt.pth --path /work\tanimoto.j\dataset\flir\FLIR_ADAS_1_3\val\thermal_8_bit\ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device 0
+python tools/demo.py image -n yolox-x -c experiment_result/finetuned/best_ckpt.pth --path /work/tanimoto.j/dataset/flir/FLIR_ADAS_1_3/val/thermal_8_bit/ --conf 0.25 --nms 0.45 --tsize 640 --save_result --device 0
